@@ -11,10 +11,11 @@
   - undici 经 127.0.0.1:7897 代理：2ms 内 fetch failed
 - 修复：启动脚本添加 `NO_PROXY=...,integrate.api.nvidia.com`（保留 HTTPS_PROXY 其余不变）后恢复。
 - 结论：模型出站请求必须豁免代理直连。理由：走代理即慢/挂，直连正常。
-- **延迟分两档（勿混淆）**：
-  - node 直连 NVIDIA（无 dsh、无工具）：首 token ~11.2s（2026-09-26 对照实验）
-  - browser 侧边栏完整链路（2026-09-26 新用户资料实测）：首 token 约 **23s**——含扩展注入的浏览器上下文（本次 ~10.7k 输入 token：系统提示 + 工具清单 + 浏览器页面上下文）与首 token 渲染；dsh 内部计时 ttft=13.4s，用户可见约 23s
+- **延迟分档（勿混淆）**：
+  - node 直连 NVIDIA（无 dsh、无工具）：首 token **11.2s**（简短回复）与 **25.6s**（300 字回复）——同模型同端点，两次差异显著 → NVIDIA 免费端点延迟波动大，瓶颈在端点不在 dsh
+  - browser 侧边栏完整链路（2026-09-26 新用户资料实测）：首 token 约 **23s**；dsh 内部 TTFT 13.4s（本次 ~10.7k 输入 token），用户可见约 23s
   - 最慢路径（无 NO_PROXY）：349.3s（2026-09-25 实测）
+- **DEEPSEEK_API_KEY 已失效**：node 直连 api.deepseek.com 返回 HTTP 401 invalid key；该 provider 不可用，计费情况待用户确认。
 
 ### 2. Node 22.16 不满足要求、确需升级，但不是卡顿的原因
 - monorepo 根 package.json 声明 `engines: node "^22.19.0 || >=24.0.0"`，npm 发布包未带 engines。

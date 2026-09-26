@@ -14,11 +14,13 @@
 - ⚠️ 主 profile turn/end 仍报 `Cannot read properties of undefined (reading 'length')`：8 个钩子插件全禁后模型可回复，但 turn 收尾仍报错——来源未定位（不在已禁 8 插件内）。
 - ⏳ bridge 补丁（Origin 精确匹配扩展 ID）：**源码已改、diff 已给用户等待确认**（server.ts `origin === 'chrome-extension://icikjojcmpmokjiojnogdhkocammlepc'`）；确认后 pnpm build + start-browser.cmd 重启；升级 dsh-browser 后需重新应用。
 
-## 2026-09-26 补充（侧边栏实测 + 性能数据）
+## 2026-09-26 补充（侧边栏实测 + 性能数据 + 补丁已应用）
 - 用户在新 Chrome 用户资料加载扩展，侧边栏"你好"首 token 感知 ~23s。
 - 实测数据（会话 session-3ce3499a…）：输入 10699 tokens、内部 ttft 13.4s、输出 178 tokens、7.4 tok/s、总 37.4s、无重试；标题请求与主请求同时发出。
-- node 直连对照：NVIDIA 首 token 25.6s / 338 字符 / 70s；**DEEPSEEK_API_KEY 无效（401）**，计费方式待用户确认。
-- 扩展 ID `icikjojcmpmokjiojnogdhkocammlepc` **换用户资料不变**（同路径加载）；旧用户资料里的 dsh 扩展已卸载。
+- node 直连对照（两次）：11.2s（简短）/ 25.6s（300 字）→ **结论修正：NVIDIA 端点波动大，瓶颈在端点不在 dsh**（"预填充导致慢"已证伪）。DEEPSEEK_API_KEY 401 **失效**，计费待确认。
+- 扩展 ID `icikjojcmpmokjiojnogdhkocammlepc` **换用户资料不变**；旧用户资料里的 dsh 扩展已卸载。
+- **bridge 补丁已构建并重启**（server.ts 精确匹配扩展 ID）：待用户在侧边栏实测免 token 连接。
+- 只读调研（未改动）：推理强度/标题生成的配置可选项 → tech-notes/dsh-performance-options.md。
 - 详：tech-notes/performance-2026-09-26.md。
 
 ## 待办（下次优先）

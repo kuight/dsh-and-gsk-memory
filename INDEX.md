@@ -20,6 +20,8 @@
 | `tech-notes/plugin-compat-issues.md` | 28 个禁用 entry 明细（A 确认不兼容 / B 诊断临时禁用） |
 | `tech-notes/profiles.md` | 三 profile 用途/端口/启动脚本/通用模式 |
 | `tech-notes/bridge-security.md` | 桥 token + Origin 双闸、免 token 前提、已知缺口 |
+| `tech-notes/performance-2026-09-26.md` | 侧边栏/直连延迟实测数据 + 结论（瓶颈在端点） |
+| `tech-notes/dsh-performance-options.md` | 推理强度/标题生成的配置可选项（只读调研） |
 | `tech-notes/genspark2api.md` | genspark2api 终止：源码审查证据链 + 勿复勘 |
 | `tech-notes/known-facts.md` | 已验证事实与勿复勘结论（含"旧标签页"来源证据） |
 | `tech-notes/hard-rules.md` | 硬规则：禁金融站点、禁 unrestricted browser control |
@@ -30,7 +32,8 @@
 | `handoffs/2026-09-26-dsh-upgrade-browser.md` | 本次交接摘要 |
 
 ## 已验证事实（勿再当疑点重查）
-- ✅ **NO_PROXY 缺省会让模型请求慢/挂**：实测走 7897 代理 turn 等待 349.3s 且无重试；node 直连 NVIDIA 首 token 11.2s、同一代理 2ms 失败；启动脚本加 `NO_PROXY=...,integrate.api.nvidia.com` 后恢复。区分两个数值：**node 直连约 11s**（对照实验），**browser 侧边栏实测首 token 约 23s**（扩展侧完整链路，浏览器自带上下文 + 工具清单 + 首 token 渲染）。证据：tech-notes/dsh-upgrade-0.1.5.md、handoffs/2026-09-26-dsh-upgrade-browser.md。
+- ✅ **NO_PROXY 缺省会让模型请求慢/挂**：实测走 7897 代理 turn 等待 349.3s 且无重试；node 直连 NVIDIA 正常、同一代理 2ms 失败；启动脚本加 `NO_PROXY=...,integrate.api.nvidia.com` 后恢复。
+- ✅ **NVIDIA 免费端点延迟波动大，瓶颈在端点不在 dsh**：node 直连首 token 两次实测 **11.2s 与 25.6s**（同模型同端点），输出约 7 tok/s；browser 侧边栏内部 TTFT 13.4s（用户感知 ~23s）。"预填充导致慢"的旧结论已证伪。证据：tech-notes/performance-2026-09-26.md。
 - ✅ **Node 22.16 不满足要求、确需升级，但不是卡顿的原因**：monorepo 声明 `^22.19.0 || >=24.0.0`，22.16 低于下限 → 升级为必要；但换 Node 24 后现象不变，卡顿根因是代理（见上一条）。
 - ✅ **"旧标签页作祟"**：来源 DSH-HANDOFF.md（dsh 端早期记忆）——"DSH 界面'一直转圈'的根因（2026-09-21 已解决）：浏览器旧标签卡在已杀进程的死 WebSocket 连接上。服务端本身健康（HTTP/RPC/WS 全测过）。解法=全关 3080 标签页+新开标签。勿再怀疑 DSH 进程死锁。"证据为当时实测记录。详情 tech-notes/known-facts.md。
 
