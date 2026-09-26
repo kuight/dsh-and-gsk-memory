@@ -1,0 +1,14 @@
+# dsh-memory gitleaks 自定义配置
+# 基准：继承 gitleaks 默认规则集（useDefault = true），再追加自定义规则。
+# 引用：.githooks/pre-commit 中 gitleaks protect --staged -c 本文件。
+
+[extend]
+useDefault = true
+
+# Genspark API key：以 gsk- 或 gsk_ 为前缀的长密钥（实际签发格式为 gsk- + base64url JWT）。
+# 兼容用户口述的 "gsk_" 写法，故两种前缀都匹配；长度下限 {20,} 用于降低误报。
+[[rules]]
+id = "genspark-api-key"
+description = "Genspark API key (gsk- / gsk_ prefix)"
+regex = '''gsk[-_][A-Za-z0-9_-]{20,}'''
+keywords = ["gsk-", "gsk_"]

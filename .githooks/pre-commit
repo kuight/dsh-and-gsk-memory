@@ -12,8 +12,9 @@ GITLEAKS="$REPO_ROOT/.tools/gitleaks/gitleaks.exe"
 FAILED=0
 
 # --- 1) gitleaks (staged scan) ---
+# 使用仓库内 .gitleaks.toml（继承默认规则集 + gsk- 前缀密钥规则）
 if [ -x "$GITLEAKS" ]; then
-  "$GITLEAKS" protect --staged -v >/dev/null 2>&1
+  "$GITLEAKS" protect --staged -c "$REPO_ROOT/.gitleaks.toml" -v >/dev/null 2>&1
   if [ $? -ne 0 ]; then
     echo "gitleaks: 检测到疑似密钥，提交被拒绝。"
     FAILED=1
