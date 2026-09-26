@@ -1,0 +1,46 @@
+#!/bin/sh
+# Pre-commit hook: gitleaks + custom secret-pattern scan.
+# Installed via core.hooksPath (see runbooks/memory-repo.md).
+# NOTE: this hook file itself contains scanner rule literals, so
+# `.githooks/` is excluded from the custom scan (not from gitleaks).
+set -u
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || exit 1
+
+GITLEAKS="$REPO_ROOT/.tools/gitleaks/gitleaks.exe"
+FAILED=0
+
+# --- 1) gitleaks (staged scan) ---
+if [ -x "$GITLEAKS" ]; then
+  "$GITLEAKS" protect --staged -v >/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "gitleaks: 检测到疑似密钥，提交被拒绝。"
+    FAILED=1
+  fi
+else
+  echo "警告: .tools/gitleaks/gitleaks.exe 不存在，gitleaks 检查跳过。"
+fi
+
+# --- 2) custom secret-pattern scan over staged text files ---
+# Reject: session_id=, ?token=, nvapi-<hex>, Bearer <long-hex> (case-insensitive)
+# `.githooks/` is skipped because this hook file legitimately contains the
+# rule literals above.
+HIT=$(
+  git diff --cached --name-only -z | tr '\0' '\n' | while IFS= read -r f; do
+    case "$f" in
+      .githooks/*) continue ;;
+      *.png|*.jpg|*.jpeg|*.gif|*.webp|*.ico|*.pdf|*.zip|*.exe|*.dll|*.zst|*.zstd) continue ;;
+    esac
+    [ -f "$f" ] || continue
+    grep -n -i -E 'session_id=|(\?|&)token=|nvapi-|Bearer [A-Za-z0-9]{20,}' "$f" 2>/dev/null && echo "   ^ in $f"
+  done
+)
+if [ -n "$HIT" ]; then
+  echo "自定义敏感词扫描: 发现疑似密钥/令牌字样，提交被拒绝："
+  echo "$HIT"
+  FAILED=1
+fi
+
+[ $FAILED -ne 0 ] && exit 1
+exit 0

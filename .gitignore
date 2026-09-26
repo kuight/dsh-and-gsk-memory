@@ -1,0 +1,14 @@
+# logs and session data
+*.log
+*.jsonl
+*.jsonl.*
+*.zstd
+
+# env / secrets
+.env
+*credentials*
+*token*
+last-url.txt
+
+# local tooling binary (installed locally; hook warns if missing)
+.tools/
