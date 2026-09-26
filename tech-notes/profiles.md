@@ -18,6 +18,8 @@
 - 启动：`E:\work\dsh-run\start-browser.cmd`
 - 端口 3081 在扩展自动发现列表 `[3080,3081,3090,14389,43189]` 内 → 扩展零配置自动连接
 - 扩展目录：`C:\Users\Administrator\.dsh\browser-extension`（Chrome 加载已解压扩展用）
+- **扩展 ID**：`icikjojcmpmokjiojnogdhkocammlepc`——由"加载已解压扩展"的路径派生，换 Chrome 用户资料目录**不变**（只要加载同一路径）；若移动/重装扩展目录到不同路径，ID 会变，桥的精确 Origin 匹配补丁需同步更新（runbooks/bridge-patch.md）。
+- **侧边栏实测（2026-09-26，新 Chrome 用户资料）**：发"你好"首 token 约 **23s**（扩展侧完整链路，含浏览器上下文注入 + 工具清单 + 首 token 渲染）；node 直连 NVIDIA 同模型约 11s。旧用户资料里的 dsh 扩展已卸载。
 
 ## provider 变更记录（排障改动，非定论）
 

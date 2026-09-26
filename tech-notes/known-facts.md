@@ -9,8 +9,12 @@
 - 对照（node 直连 NVIDIA API，key 走 credentials 组件、长度 70 未打印）：
   - 直连（无代理）：首 token 11.2s，完成 11.5s
   - undici 经 127.0.0.1:7897 代理：2ms 内 fetch failed
-- 修复：启动脚本添加 `NO_PROXY=...,integrate.api.nvidia.com`（保留 HTTPS_PROXY 其余不变）后恢复 ~11s 级。
+- 修复：启动脚本添加 `NO_PROXY=...,integrate.api.nvidia.com`（保留 HTTPS_PROXY 其余不变）后恢复。
 - 结论：模型出站请求必须豁免代理直连。理由：走代理即慢/挂，直连正常。
+- **延迟分两档（勿混淆）**：
+  - node 直连 NVIDIA（无 dsh、无工具）：首 token ~11.2s（2026-09-26 对照实验）
+  - browser 侧边栏完整链路（2026-09-26 新用户资料实测）：首 token 约 **23s**——含扩展注入的浏览器上下文（本次 ~10.7k 输入 token：系统提示 + 工具清单 + 浏览器页面上下文）与首 token 渲染；dsh 内部计时 ttft=13.4s，用户可见约 23s
+  - 最慢路径（无 NO_PROXY）：349.3s（2026-09-25 实测）
 
 ### 2. Node 22.16 不满足要求、确需升级，但不是卡顿的原因
 - monorepo 根 package.json 声明 `engines: node "^22.19.0 || >=24.0.0"`，npm 发布包未带 engines。
