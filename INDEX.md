@@ -13,7 +13,12 @@
 - ✅ modlens 排除误伤（禁用仍报错、恢复后 completed）
 - ⚠️ 最终 17 个 entry 保持禁用（14 个 A 类剩余 + memoir/mnemon/logicprobe）等作者适配
 - ✅ approve-for-me 已确认不在 browser profile（hard-rules.md 新增规则：只允许 web）
-- ⏳ 记忆仓库本批推送
+- ⏳ **0.1.7-rc.2 隔离试装进行中**：环境就绪（dsh-run-017 / dsh-home-017，端口 3400），主环境零污染（快照对比通过）；迁移未执行、browser 不兼容待官方合并；17 entry 判定表待补。详见 handoffs/2026-09-27-dsh-017-trial.md
+
+## 未完成事项
+- ⏳ 0.1.7 下 17 个 entry 的逐项判定表待补（本轮试装因 EACCES + 工具格式损坏中止）。
+- ⏳ **`rpc-test.js` 是否硬编码 cookie、是否已提交，待确认。**
+- ⏳ settings 迁移兜底验证：建议把副本放到 `dsh-home-017/profiles/diag-min/settings.yaml` 让迁移真跑一遍（保留观测价值），失败再手工写 patch。
 
 ## 文件用途
 | 文件 | 用途 |
@@ -28,13 +33,18 @@
 | `tech-notes/genspark2api.md` | genspark2api 终止：源码审查证据链 + 勿复勘 |
 | `tech-notes/known-facts.md` | 已验证事实与勿复勘结论（含"旧标签页"来源证据） |
 | `tech-notes/hard-rules.md` | 硬规则：禁金融站点、禁 unrestricted browser control |
+| `tech-notes/dsh-0.1.7-research.md` | 0.1.7 破坏性变更要点、browser 不兼容证据（#102/#103）、插件判定表 |
+| `tech-notes/decisions.md` | 决策记录：双版本共存、不打 PR#103、approve-for-me 不强装、试装隔离 |
 | `runbooks/start-profiles.md` | 启动各 profile + 验证命令 + 自查清单 |
 | `runbooks/upgrade-dsh.md` | 升级流程 + 铁律 + 回滚 |
 | `runbooks/memory-repo.md` | 本仓库维护：结构/工具/流程/写记忆准则 |
-| `runbooks/bridge-patch.md` | Origin 精确匹配补丁方案（暂缓） |
-| `handoffs/2026-09-26-dsh-upgrade-browser.md` | 本次交接摘要 |
+| `runbooks/collaboration.md` | 与执行者 Agent 协作：执行者模式/40 行汇报/停止条件/新对话入口 |
+| `runbooks/bridge-patch.md` | Origin 精确匹配补丁（**已应用**） |
+| `handoffs/2026-09-27-dsh-017-trial.md` | 本次交接摘要：0.1.7 隔离试装（017） |
+| `handoffs/2026-09-26-dsh-upgrade-browser.md` | 上一批交接摘要 |
 
 ## 已验证事实（勿再当疑点重查）
+- ✅ **Windows 保留端口段 3135–3234 不可用**：0.1.7 试装把 diag-min 端口设 3190，启动即 `StartupError: listen EACCES: permission denied 127.0.0.1:3190`（webserver 为 required → 9 个插件挂起）。该段属 Windows 动态端口保留区（netsh 可查），换 3400 后正常。勿再把这类 EACCES 当权限/防火墙问题排查。
 - ✅ **NO_PROXY 缺省会让模型请求慢/挂**：实测走 7897 代理 turn 等待 349.3s 且无重试；node 直连 NVIDIA 正常、同一代理 2ms 失败；启动脚本加 `NO_PROXY=...,integrate.api.nvidia.com` 后恢复。
 - ✅ **NVIDIA 免费端点延迟波动大，瓶颈在端点不在 dsh**：node 直连首 token 两次实测 **11.2s 与 25.6s**（同模型同端点），输出约 7 tok/s；browser 侧边栏内部 TTFT 13.4s（用户感知 ~23s）。"预填充导致慢"的旧结论已证伪。证据：tech-notes/performance-2026-09-26.md。
 - ✅ **Node 22.16 不满足要求、确需升级，但不是卡顿的原因**：monorepo 声明 `^22.19.0 || >=24.0.0`，22.16 低于下限 → 升级为必要；但换 Node 24 后现象不变，卡顿根因是代理（见上一条）。
