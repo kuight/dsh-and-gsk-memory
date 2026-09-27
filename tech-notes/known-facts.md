@@ -23,7 +23,14 @@
 - 但升级 Node 后错误现象不变（插件树报错、模型慢均与 Node 版本无关）；卡顿根因实为代理（见上条）。
 - 结论：Node 升级是硬性要求，但不是本次问题的解法。
 
-### 3. "旧标签页作祟"（来源：dsh 端早期记忆，2026-09-21 已实测解决）
+### 3. turn/end `undefined (reading 'length')` 根因 = dsh-memoir（2026-09-27 二分定位）
+- 现象：模型正常回复（ASSISTANT 消息落地），但每次 turn 收尾 turn/end 事件带 `reason: {kind:"error", error:{message:"Cannot read properties of undefined (reading 'length')", code:"UNKNOWN"}}`。
+- 根因：dsh-memoir `lib/autodistill.js` 注册 `wire.on('agent/turn-stopping', ...)`，调用 `turnActivity(agent.session.events, turn)` 的 `events.length` 未判空；dsh 0.1.5 下 `agent.session.events` 为 undefined → 抛 TypeError。
+- 验证链（逐一控制变量）：禁 modlens 仍报 → 禁 memoir 后 turn/end=completed → 恢复 modlens 仍 completed → 根因确证，modlens 系误伤已恢复。
+- 同类新发现：dsh-mnemon（`for...of this.agent.session.events` 报 not iterable）、dsh-logicprobe（`session.events.length` 未判空）恢复后分别重现同类错，均回禁等作者适配。
+- 排查教训：扫描插件钩子不能只搜 `ctx.on(`——memoir 用的是 `wire.on('agent/turn-stopping')`；且权威 enabled 列表以 `dsh --dump-config` 的 disabled 标志为准（patch 的 id 与 bundle 名不对应会误判）。
+
+### 4. "旧标签页作祟"（来源：dsh 端早期记忆，2026-09-21 已实测解决）
 - 原文要点（来源 DSH-HANDOFF.md"二、本次会话已确认的结论"第 4 条）：
   > DSH 界面"一直转圈"的根因（2026-09-21 已解决）：浏览器旧标签卡在已杀进程的死 WebSocket 连接上。服务端本身健康（HTTP/RPC/WS 全测过）。解法=全关 3080 标签页+新开标签。勿再怀疑 DSH 进程死锁。
 - 证据：当时对服务端 HTTP/RPC/WS 的实测记录（见 DSH-HANDOFF.md 原文）。

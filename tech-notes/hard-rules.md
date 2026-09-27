@@ -7,6 +7,8 @@
    - 原因：金融站点涉及资产与隐私，一旦误操作代价不可逆；宁可全部拒绝。
 2. **不开启 dsh-browser 的 unrestricted browser control（不受限浏览器控制）**。
    - 原因：该模式免除所有浏览器操作审批，会破坏"用户显式确认每次操作"的安全边界（见 tech-notes/bridge-security.md）。
+3. **approve-for-me 插件只允许存在于 web profile（3080）**，禁止装进 browser profile。
+   - 原因：用户 2026-09-27 明确指定；browser profile 保持纯官方 + 桥接的最小面。
 
 ## 行为推论
 - 任何网页测试只允许在无害站点（如 example.com 等文档示例域）进行。

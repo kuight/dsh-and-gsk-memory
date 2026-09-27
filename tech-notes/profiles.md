@@ -4,7 +4,7 @@
 - 位置：`C:\Users\Administrator\.dsh\profiles\web`
 - 用途：日常主工作 profile；bundle 含大量第三方插件
 - 启动：`E:\work\dsh-run\start-dsh.cmd`
-- 注意：当前 28 个 entry 被 patch 禁用（可能是临时的，见 plugin-compat-issues.md）；turn/end 报错支线未查完
+- 注意：当前 17 个 entry 被 patch 禁用（14 个 A 类剩余 + memoir/mnemon/logicprobe 等作者适配，见 plugin-compat-issues.md）；**turn/end undefined.length 根因已定位为 memoir**，禁后 completed；B 类 9 个 + A 类升级 3 个已恢复
 
 ## diag-min（最小诊断 profile，3180）
 - 位置：`C:\Users\Administrator\.dsh\profiles\diag-min`
