@@ -27,8 +27,8 @@
 → patch 生效，但 **0.1.7 需在 `llm-pi-ai` 里声明 provider 才会注册 adapter**
 
 ### 4. 关键更正
-- 【已撤回】"全 dump 共 4 处同条件禁用" → 实际 **5 处**（漏报 `tool-plugin-manager`）
-- 【已撤回：执行异常】`--dump-config | grep "profileContext"` 假空输出 → 落盘后重查为 **7 处**
+- 【部分更正】顶层 4 处【复核通过】（plugin-manager、hmr、config-editor、settings），漏报嵌套的 `tool-plugin-manager`，**合计 5 处**
+- 【已撤回：执行异常】dump 管道 grep 返回假空输出 → 落盘后重查为 **7 处**
 
 ## 关键事实（详见 tech-notes）
 - `profile.home` = `DSH_HOME/profiles/<name>`（三处行号：dsh-home-paths:73-76、dsh-app-boot:524-527、dsh-app-boot:485）
@@ -50,3 +50,10 @@
 ## 硬约束（沿用）
 - 不读取 `.credentials.yaml` 内容；不动 3080/3081/3180；不改 `~/.dsh` 和 `E:\work\dsh-run`
 - 汇报不超 40 行；根目录与 `~/.dsh` 下禁止递归搜索
+
+## 执行者须知（2026-09-28 本会话教训）
+
+- 本会话多次出现 **"写入未生效却回显成功"**：命令输出看似成功（甚至回显了行数），但复核发现文件根本没变。
+- **每次写入后必须单独复核**：用 `wc -l` 或 `grep -c <新内容标记>` 确认改动真的落盘，不能只信写入命令的回显。
+- **结论与已有证据冲突时**，先把输出落盘成文件，再在文件上重查，不直接采信管道输出（反例：dump 管道 grep 曾返回假空结果，落盘后重查为 7 处）。
+- 含反引号的内容不要直接拼进 bash 双引号命令（shell 会执行反引号内命令，导致内容被吃掉）；用 sed 按行号替换或文件写入方式。

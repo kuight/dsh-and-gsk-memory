@@ -13,12 +13,14 @@
 - ✅ modlens 排除误伤（禁用仍报错、恢复后 completed）
 - ⚠️ 最终 17 个 entry 保持禁用（14 个 A 类剩余 + memoir/mnemon/logicprobe）等作者适配
 - ✅ approve-for-me 已确认不在 browser profile（hard-rules.md 新增规则：只允许 web）
-- ⏳ **0.1.7-rc.2 隔离试装进行中**：环境就绪（dsh-run-017 / dsh-home-017，端口 3400），主环境零污染（快照对比通过）；迁移未执行、browser 不兼容待官方合并；17 entry 判定表待补。详见 handoffs/2026-09-27-dsh-017-trial.md
+- ⚠️ **0.1.7-rc.2 隔离试装（017）**：迁移未执行【实测】；只补 agent-default-model 时报 NO_ADAPTER，链路未通；主环境暂不升级 0.1.7-rc.2。详见 handoffs/2026-09-28-dsh-017-migration-probe.md
 
 ## 未完成事项
-- ⏳ 0.1.7 下 17 个 entry 的逐项判定表待补（本轮试装因 EACCES + 工具格式损坏中止）。
-- ⏳ **`rpc-test.js` 是否硬编码 cookie、是否已提交，待确认。**
-- ⏳ settings 迁移兜底验证：建议把副本放到 `dsh-home-017/profiles/diag-min/settings.yaml` 让迁移真跑一遍（保留观测价值），失败再手工写 patch。
+→ 待办清单统一见 handoffs/2026-09-28-dsh-017-migration-probe.md。摘要：
+- 确认 0.1.7 的 llm-pi-ai schema 是否支持 apiKeyEnv；若支持，追加只含 nvidia 的最小段后跑 rpc-test。
+- 通过设置接口是否存在，验证 settings entry 运行时是否真被禁用。
+- 补齐 0.1.7 下 17 个 entry 的逐项判定表。
+- 【假设待验】desktop profile 可能绕开 profileContext 问题。
 
 ## 文件用途
 | 文件 | 用途 |
@@ -40,7 +42,8 @@
 | `runbooks/memory-repo.md` | 本仓库维护：结构/工具/流程/写记忆准则 |
 | `runbooks/collaboration.md` | 与执行者 Agent 协作：执行者模式/40 行汇报/停止条件/新对话入口 |
 | `runbooks/bridge-patch.md` | Origin 精确匹配补丁（**已应用**） |
-| `handoffs/2026-09-27-dsh-017-trial.md` | 本次交接摘要：0.1.7 隔离试装（017） |
+| `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（最新） |
+| `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |
 | `handoffs/2026-09-26-dsh-upgrade-browser.md` | 上一批交接摘要 |
 
 ## 已验证事实（勿再当疑点重查）
