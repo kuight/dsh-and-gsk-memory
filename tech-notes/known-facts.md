@@ -42,3 +42,56 @@
 - ❌ "经 7897 代理也能正常调 NVIDIA"——对照测试 2ms 失败。
 - ❌ "modlens-nvidia provider 不存在"——modelCatalog 实测存在且可路由。
 - ❌ "升级问题在 Node 版本"——确切说法见"已验证事实 #2"：不满足要求 ≠ 卡顿原因。
+### 5. 0.1.7-rc.2 隔离试装（017）新增事实（2026-09-28）
+
+#### 5.1 迁移已执行 —— 【已证伪】
+
+原说法：0.1.7 的 importLegacyDocument 会把手写 settings.yaml 迁进 entry。
+
+实测证据（三项独立一致）：
+- profiles\diag-min\settings.yaml（3765 B，18:32 复制）未被改名成 .imported，目录内无 .imported 文件；
+- --dump-config 中 agent-default-model 为默认值 provider: deepseek-official / model: deepseek-flash；llm-pi-ai entry 存在但无 config 段；
+- rpc-test（端口 3400）返回 AUTH 401，key ****a8a1（已失效的 deepseek-official key）→ 运行时回落默认 provider。
+
+结论：settings.yaml 存在但未被导入。迁移未执行【实测】。
+
+根因：未证实。
+- 【复核通过】settings 等 entry 在 dump 中挂着 disabled 条件（dump 第 61-63 行等 5 处，见 dsh-0.1.7-research.md 5.3）；
+- 【假设】profileContext 时序导致 entry 禁用——依据只有源文件表达式与 dump 分布，无运行时证据；
+- 下会话验证方法：通过设置接口是否存在来判断。
+
+#### 5.2 README 与代码矛盾 —— 以代码为准
+
+- dsh-settings/README.md:35：说 settings.yaml 在 harness home 被导入；
+- dsh-settings/lib/index.js:348：join(profile.home, "settings.yaml") —— 实际读 profile.home（= DSH_HOME/profiles/<name>）。
+- 以代码为准。相关行号三处：dsh-home-paths/lib/index.js:73-76、dsh-app-boot/lib/index.js:524-527、dsh-app-boot/lib/index.js:485。
+
+#### 5.3 主环境暂不升级 0.1.7-rc.2
+
+- 理由：017 链路至今未跑通（NO_ADAPTER）【实测】。详见 dsh-0.1.7-research.md 5.6。
+
+#### 5.4 日志落盘条件
+
+- 日志只在 StartupError 时落盘。正常启动只写 stderr，不产生 logs/ 文件。
+- 后续 a 项检查改为：看 stderr 输出 + cordis.yml 是否被重写（prepareProfile 会重写它）。
+
+#### 5.5 启动方式与端口
+
+- Git Bash 下运行 .cmd 会被拆坏：set DSH_HOME 全部失效。注：cmd /c 要写成 cmd //c —— 未验证。
+- 017 验证时用直接 exec 启动，已验证可用。
+- 3190 端口的坑：落在 Windows 保留段 3135-3234 内，报 EACCES。改用 3400。
+- ~/.dsh 下没有 logs 目录，可作为隔离证据。
+
+#### 5.6 llm-pi-ai 声明与 adapter 注册
+
+- 只补 agent-default-model（provider=nvidia）→ 报错从 401 变为 NO_ADAPTER: no adapter registered for provider "nvidia"。
+- 说明：patch 生效了，但 0.1.7 需要在 llm-pi-ai 里声明 provider 才会注册 adapter。
+
+#### 5.7 settings.yaml 结构（只记结构，不记值）
+
+- llm-pi-ai.providers 下有四个段：amd、huggingface、mt、nvidia。
+- nvidia 段字段：apiKeyEnv、models。
+
+#### 5.8 安全规则（新增）
+
+复制到 profiles\diag-min\settings.yaml 的整份文件禁止进入仓库（含 1 处疑似 key）。疑似 key 计数 1 处，第 93 行，顶层段名 task-board:，在 llm-pi-ai 段（3-71 行）之外。
