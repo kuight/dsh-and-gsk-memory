@@ -3,7 +3,7 @@
 ## 当前目标
 维护 dsh 本机部署的知识：升级、模型链路、插件兼容、dsh-browser 桥与安全，以及已终止路线的"勿复勘"清单。
 
-## 进度快照（2026-09-27）
+## 进度快照（2026-09-28）
 - ✅ dsh 升级 0.1.1-rc.2 → 0.1.5-rc.3（F:\Apply\node24 + NO_PROXY 修复）
 - ✅ diag-min / browser 模型链路验证通过；browser 侧边栏实测首 token 约 23s
 - ✅ dsh-browser 装入 browser profile（3081），扩展已连接；bridge 补丁（Origin 精确匹配）已应用并实测
@@ -21,6 +21,8 @@
 - 通过设置接口是否存在，验证 settings entry 运行时是否真被禁用。
 - 补齐 0.1.7 下 17 个 entry 的逐项判定表。
 - 【假设待验】desktop profile 可能绕开 profileContext 问题。
+- ✅ rpc-test.js 已确认：cookie/token 均为运行时读取（非硬编码），不在仓库（见 known-facts.md 5.9）
+- ⏳ 在 3081 跑一个不需要登录的真实浏览器小任务
 
 ## 文件用途
 | 文件 | 用途 |
@@ -42,6 +44,7 @@
 | `runbooks/memory-repo.md` | 本仓库维护：结构/工具/流程/写记忆准则 |
 | `runbooks/collaboration.md` | 与执行者 Agent 协作：执行者模式/40 行汇报/停止条件/新对话入口 |
 | `runbooks/bridge-patch.md` | Origin 精确匹配补丁（**已应用**） |
+| `tech-notes/desktop-options.md` | DSH 桌面端选项调研：官方/社区/anywhere-labs、保护步骤、待验证 |
 | `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（最新） |
 | `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |
 | `handoffs/2026-09-26-dsh-upgrade-browser.md` | 上一批交接摘要 |
@@ -57,4 +60,4 @@
 ## 已证伪 / 勿复勘
 - ❌ genspark2api 驱动 agent / 本地部署 / 新模型可调——已终止，勿复勘（tech-notes/genspark2api.md）。
 - ❌ "经 7897 代理也能正常调 NVIDIA"——对照测试 2ms 失败，勿再按此前提设计。
-- ❌ "modlens-nvidia provider 不存在"——modelCatalog 实测存在且可路由，证伪。
+- ⏳ "modlens-nvidia provider 不存在"——modelCatalog 可路由已证伪，但缺测试时间与 turn/end 结果；重测后补入已验证事实。
