@@ -21,7 +21,6 @@
 - 通过设置接口是否存在，验证 settings entry 运行时是否真被禁用。
 - 补齐 0.1.7 下 17 个 entry 的逐项判定表。
 - 【假设待验】desktop profile 可能绕开 profileContext 问题。
-- ✅ rpc-test.js 已确认：cookie/token 均为运行时读取（非硬编码），不在仓库（见 known-facts.md 5.9）
 - ⏳ 在 3081 跑一个不需要登录的真实浏览器小任务
 
 ## 文件用途

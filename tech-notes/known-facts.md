@@ -40,7 +40,7 @@
 
 - ❌ genspark2api 驱动 agent / 本地部署 / 新模型可调——源码级终止，勿复勘（tech-notes/genspark2api.md）。
 - ❌ "经 7897 代理也能正常调 NVIDIA"——对照测试 2ms 失败。
-- ❌ "modlens-nvidia provider 不存在"——modelCatalog 实测存在且可路由。
+- ⏳ "modlens-nvidia provider 不存在"——modelCatalog 可路由已证伪，但缺测试时间与 turn/end 结果；重测后补入已验证事实。
 - ❌ "升级问题在 Node 版本"——确切说法见"已验证事实 #2"：不满足要求 ≠ 卡顿原因。
 ### 5. 0.1.7-rc.2 隔离试装（017）新增事实（2026-09-28）
 
@@ -115,7 +115,7 @@
 
 **（2）Chrome「由所属组织管理」的合规提醒**
 
-Chrome 设置页显示「您的浏览器由所属组织管理」，来源是**本机注册表/策略项**（Windows 上多为 `HKLM\SOFTWARE\Policies\Google\Chrome`），不是账号层面的问题。**用真实浏览器做测试时，若被测站点对浏览器受管状态敏感，需先确认该策略来源**；不要把它当成浏览器安装损坏去重装。仅供测试环境自用，不涉及对外行为。
+Chrome 设置页显示「您的浏览器由所属组织管理」，来源是**本机注册表/策略项**【未实测】（Windows 上多为 `HKLM\SOFTWARE\Policies\Google\Chrome`，路径【未实测】），不是账号层面的问题。**用真实浏览器做测试时，若被测站点对浏览器受管状态敏感、需先确认该策略来源**【未实测】；不要把它当成浏览器安装损坏去重装。仅供测试环境自用，不涉及对外行为。
 
 **（3）NVIDIA 免费档 40 RPM 被三个 profile 共用**
 
