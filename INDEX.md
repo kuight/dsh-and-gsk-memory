@@ -46,7 +46,8 @@
 | `runbooks/bridge-patch.md` | Origin 精确匹配补丁（**已应用**） |
 | `tech-notes/desktop-install.md` | DSH Desktop v0.10.0 实装记录：版本校验、数据目录隔离、网络、功能验证 |
 | `tech-notes/desktop-options.md` | DSH 桌面端选项调研：官方/社区/anywhere-labs、保护步骤、待验证 |
-| `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（最新） |
+| `handoffs/2026-09-29-reviewer-handoff.md` | 审核侧交接：桌面端 v0.10.0 实装、当前环境、未证实项、协作经验（最新） |
+| `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（017 待办清单） |
 | `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |
 | `handoffs/2026-09-26-dsh-upgrade-browser.md` | 上一批交接摘要 |
 

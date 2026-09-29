@@ -6,7 +6,7 @@
 - profile：diag-min，端口 **3400**（3190 落 Windows 保留段 3135-3234，`EACCES`）
 - 启动脚本：`E:\work\dsh-run-017\start-diag-min-017.cmd`（注释已从 3190 改为 3400）
 - **017 实际启动方式：直接 exec**（export DSH_HOME + PATH + NO_PROXY，再跑 node bin.js），不用 .cmd
-- 3400 服务当前状态：**PID 31984，保留未停**
+- 3400 服务当前状态：~~PID 31984，保留未停~~ → 2026-09-29 已停止【实测】（见 handoffs/2026-09-29-reviewer-handoff.md）
 
 ## 本会话结论
 
@@ -45,7 +45,7 @@
 2. 若支持，追加只含 `nvidia` 的最小 `llm-pi-ai` 段（key 用 `apiKeyEnv: NVIDIA_API_KEY`，不写明文），跑 rpc-test
 3. 通过设置接口验证 settings entry 运行时是否真被禁用
 4. 补齐 17 个插件判定表
-5. 【假设待验】desktop profile 可能绕开 profileContext 问题（dump 68-70、524-526 行有 `name === 'desktop'` 判断）
+5. 【已结案 2026-09-30】桌面端设置页和插件管理器可用【实测】，但桌面 profile 名为 web；原"dump 68-70、524-526 行有 `name === 'desktop'` 判断"的行号由执行者提供【未证实】，该解释不再采用。见 tech-notes/desktop-install.md
 
 ## 硬约束（沿用）
 - 不读取 `.credentials.yaml` 内容；不动 3080/3081/3180；不改 `~/.dsh` 和 `E:\work\dsh-run`
