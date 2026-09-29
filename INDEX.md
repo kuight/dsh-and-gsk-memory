@@ -14,7 +14,7 @@
 - ⚠️ 最终 17 个 entry 保持禁用（14 个 A 类剩余 + memoir/mnemon/logicprobe）等作者适配
 - ✅ approve-for-me 已确认不在 browser profile（hard-rules.md 新增规则：只允许 web）
 - ⚠️ **0.1.7-rc.2 隔离试装（017）**：迁移未执行【实测】；只补 agent-default-model 时报 NO_ADAPTER，链路未通；主环境暂不升级 0.1.7-rc.2。详见 handoffs/2026-09-28-dsh-017-migration-probe.md
-- ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求直连未走 7897；主进程监听 0.0.0.0:43127 且防火墙关闭（风险）。详见 tech-notes/desktop-install.md
+- ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求期间 Harness 直连外部 443、未见 7897 连接（目标 IP 是否 NVIDIA 未证实）；主进程监听 0.0.0.0:43127 且防火墙关闭（风险）。详见 tech-notes/desktop-install.md
 
 ## 未完成事项
 → 待办清单统一见 handoffs/2026-09-28-dsh-017-migration-probe.md。摘要：
@@ -44,6 +44,7 @@
 | `runbooks/memory-repo.md` | 本仓库维护：结构/工具/流程/写记忆准则 |
 | `runbooks/collaboration.md` | 与执行者 Agent 协作：执行者模式/40 行汇报/停止条件/新对话入口 |
 | `runbooks/bridge-patch.md` | Origin 精确匹配补丁（**已应用**） |
+| `tech-notes/desktop-install.md` | DSH Desktop v0.10.0 实装记录：版本校验、数据目录隔离、网络、功能验证 |
 | `tech-notes/desktop-options.md` | DSH 桌面端选项调研：官方/社区/anywhere-labs、保护步骤、待验证 |
 | `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（最新） |
 | `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |

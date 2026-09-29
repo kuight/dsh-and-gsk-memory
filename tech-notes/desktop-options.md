@@ -39,4 +39,4 @@
 ## 6. 实装结果（2026-09-30）
 
 - 已选 dataelement v0.10.0，内置 Harness 0.1.7-rc.2（不是第 1、2 节写的 rc.1）。详见 tech-notes/desktop-install.md。
-- 第 5 节两项：设置页和插件管理器可用【实测】；从图标启动时 Harness 的模型请求直连、没走 7897【实测】，Electron 进程会连系统代理【实测】。
+- 第 5 节两项：设置页和插件管理器可用【实测】；从图标启动后，模型请求期间 Harness 直连外部 443、未见 7897 连接【实测】，目标 IP 是否 NVIDIA【未证实】；User/Machine 级 HTTPS_PROXY 本来为空【实测】，"继承 HTTPS_PROXY"问题实际不成立，Electron 进程会连系统代理【实测】。
