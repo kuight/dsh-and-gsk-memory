@@ -35,3 +35,8 @@
 
 1. **desktop profile 能不能绕开 profileContext 问题** —— 看设置页和插件管理器能否使用。
 2. **从图标启动时会不会继承 HTTPS_PROXY**。
+
+## 6. 实装结果（2026-09-30）
+
+- 已选 dataelement v0.10.0，内置 Harness 0.1.7-rc.2（不是第 1、2 节写的 rc.1）。详见 tech-notes/desktop-install.md。
+- 第 5 节两项：设置页和插件管理器可用【实测】；从图标启动时 Harness 的模型请求直连、没走 7897【实测】，Electron 进程会连系统代理【实测】。

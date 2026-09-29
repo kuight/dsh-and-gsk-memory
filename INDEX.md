@@ -14,13 +14,14 @@
 - ⚠️ 最终 17 个 entry 保持禁用（14 个 A 类剩余 + memoir/mnemon/logicprobe）等作者适配
 - ✅ approve-for-me 已确认不在 browser profile（hard-rules.md 新增规则：只允许 web）
 - ⚠️ **0.1.7-rc.2 隔离试装（017）**：迁移未执行【实测】；只补 agent-default-model 时报 NO_ADAPTER，链路未通；主环境暂不升级 0.1.7-rc.2。详见 handoffs/2026-09-28-dsh-017-migration-probe.md
+- ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求直连未走 7897；主进程监听 0.0.0.0:43127 且防火墙关闭（风险）。详见 tech-notes/desktop-install.md
 
 ## 未完成事项
 → 待办清单统一见 handoffs/2026-09-28-dsh-017-migration-probe.md。摘要：
 - 确认 0.1.7 的 llm-pi-ai schema 是否支持 apiKeyEnv；若支持，追加只含 nvidia 的最小段后跑 rpc-test。
 - 通过设置接口是否存在，验证 settings entry 运行时是否真被禁用。
 - 补齐 0.1.7 下 17 个 entry 的逐项判定表。
-- 【假设待验】desktop profile 可能绕开 profileContext 问题。
+- 【已实测】桌面端 v0.10.0 设置页和插件管理器可用，原因未证实（见 tech-notes/desktop-install.md）。
 - ⏳ 在 3081 跑一个不需要登录的真实浏览器小任务
 
 ## 文件用途
