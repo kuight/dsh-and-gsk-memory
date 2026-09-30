@@ -15,6 +15,7 @@
 - ✅ approve-for-me 已确认不在 browser profile（hard-rules.md 新增规则：只允许 web）
 - ⚠️ **0.1.7-rc.2 隔离试装（017）**：迁移未执行【实测】；只补 agent-default-model 时报 NO_ADAPTER，链路未通；主环境暂不升级 0.1.7-rc.2。详见 handoffs/2026-09-28-dsh-017-migration-probe.md
 - ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求期间 Harness 直连外部 443、未见 7897 连接（目标 IP 是否 NVIDIA 未证实）；主进程 0.0.0.0:43127 为手机配对桥，防火墙已开启并放行该端口（用户决定局域网开放）。详见 tech-notes/desktop-install.md
+- ⚠️ **旧工程会话恢复中（2026-09-30）**：桌面端 0.1.7 拒绝转换 work 下的旧会话；改为回 3080（0.1.5）打开，3080 前端卡在 dsh-deepread / dsh-chat-import。详见 handoffs/2026-09-30-plugins-sessions.md
 
 ## 未完成事项
 → 待办清单统一见 handoffs/2026-09-28-dsh-017-migration-probe.md。摘要：
@@ -46,7 +47,9 @@
 | `runbooks/bridge-patch.md` | Origin 精确匹配补丁（**已应用**） |
 | `tech-notes/desktop-install.md` | DSH Desktop v0.10.0 实装记录：版本校验、数据目录隔离、网络、功能验证 |
 | `tech-notes/desktop-options.md` | DSH 桌面端选项调研：官方/社区/anywhere-labs、保护步骤、待验证 |
-| `handoffs/2026-09-29-reviewer-handoff.md` | 审核侧交接：桌面端 v0.10.0 实装、当前环境、未证实项、协作经验（最新） |
+| `handoffs/2026-09-30-plugins-sessions.md` | 最新交接：插件与旧会话恢复进行中、3080 状态、备份与回退 |
+| `handoffs/worklog.md` | 滚动工作日志：每个任务的结果随任务一起追加 |
+| `handoffs/2026-09-29-reviewer-handoff.md` | 审核侧交接：桌面端 v0.10.0 实装、当前环境、未证实项、协作经验 |
 | `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（017 待办清单） |
 | `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |
 | `handoffs/2026-09-26-dsh-upgrade-browser.md` | 上一批交接摘要 |

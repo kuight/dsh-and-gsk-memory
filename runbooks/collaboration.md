@@ -48,3 +48,11 @@
 - 脚本先写成 .ps1 文件再执行，输出落盘再读；不在 bash 里内联 PowerShell。
 - 预计超过 100 s 的命令改为 Start-Process 后台执行，再轮询结束标记。
 - 运行 .ps1 一律加进程级 -ExecutionPolicy Bypass，本机会拒绝未签名脚本；不修改机器或用户级执行策略。
+
+### 执行者环境与通用约束（2026-09-30 起）
+- 执行者现在运行在 DSH Desktop 自己的会话里（完全权限）。它不能停止或重启 DSH Desktop，否则会把自己关掉；桌面端的退出和重启一律由用户手动做。
+- 通用硬约束（任务书可写"遵守通用硬约束"，再补本任务特有的）：不读取或打印任何凭据、token、key；不打印进程命令行；未经任务书授权不启停进程、不改 ~/.dsh、%APPDATA%\dsh-desktop、防火墙和 git 配置；git 只 add 指定文件；报告不出现带 token 参数的地址；命令原样执行，偏差写明。
+- 禁止进仓库：%APPDATA%\dsh-desktop 与 %APPDATA%\dsh-desktop.old-0930 的全部内容、dsh-home-017\profiles\diag-min\settings.yaml、E:\work\dump-017.txt、任何 .credentials* 文件。
+- 代理端口不固定（写入时为 7897）：需要代理时从 HKCU 的 Internet Settings\ProxyServer 读取，不写死；git 推送用 git -c http.proxy=... 临时代理，不改 git 配置。
+- PowerShell 自定义函数用 Verb-Noun 名字，不用单字母：单字母可能撞上内置别名（r 即 Invoke-History），别名优先于函数，任务 K2 因此整段失败。
+- 记忆随任务推送：会产生新事实的任务书，最后一步由审核侧给出 2-5 行日志，执行者追加到 handoffs/worklog.md，随任务一起 commit/push，不再单开一轮写记忆；执行者自己的推断不写进日志。
