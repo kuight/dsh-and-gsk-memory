@@ -14,7 +14,7 @@
 - ⚠️ 最终 17 个 entry 保持禁用（14 个 A 类剩余 + memoir/mnemon/logicprobe）等作者适配
 - ✅ approve-for-me 已确认不在 browser profile（hard-rules.md 新增规则：只允许 web）
 - ⚠️ **0.1.7-rc.2 隔离试装（017）**：迁移未执行【实测】；只补 agent-default-model 时报 NO_ADAPTER，链路未通；主环境暂不升级 0.1.7-rc.2。详见 handoffs/2026-09-28-dsh-017-migration-probe.md
-- ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求期间 Harness 直连外部 443、未见 7897 连接（目标 IP 是否 NVIDIA 未证实）；主进程监听 0.0.0.0:43127 且防火墙关闭（风险）。详见 tech-notes/desktop-install.md
+- ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求期间 Harness 直连外部 443、未见 7897 连接（目标 IP 是否 NVIDIA 未证实）；主进程 0.0.0.0:43127 为手机配对桥，防火墙已开启并放行该端口（用户决定局域网开放）。详见 tech-notes/desktop-install.md
 
 ## 未完成事项
 → 待办清单统一见 handoffs/2026-09-28-dsh-017-migration-probe.md。摘要：

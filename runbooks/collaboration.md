@@ -47,3 +47,4 @@
 - 读文件用 Read 按 offset 分页直到 EOF，汇报写明读到第几行。
 - 脚本先写成 .ps1 文件再执行，输出落盘再读；不在 bash 里内联 PowerShell。
 - 预计超过 100 s 的命令改为 Start-Process 后台执行，再轮询结束标记。
+- 运行 .ps1 一律加进程级 -ExecutionPolicy Bypass，本机会拒绝未签名脚本；不修改机器或用户级执行策略。

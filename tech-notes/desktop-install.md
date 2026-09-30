@@ -32,3 +32,11 @@
 - 017 的 3400（PID 31984）已停止。【实测】
 - 2026-09-29 时 3080 和 3180 已不在监听，用户确认不是自己关的，原因【未证实】；3081 仍由 PID 19304 运行。【实测】
 - ~/.dsh\.credentials.yaml.bak（143 B，2026-08-23）不是用户手动生成的，来源【假设】为首次配置 key 时生成。
+
+## 6. 防火墙与手机连接（2026-09-30）
+- Windows 防火墙三个配置文件均已开启，入站默认 NotConfigured（按默认阻止处理）。【实测】
+- 用户另开的 agent 用 E:\work\_enable-firewall.ps1 开启防火墙，并建了规则组 DSH-Managed：43127 与 8001 各有 TCP4/TCP6 入站允许规则，不限来源。【用户提供对话记录；43127 两条已实测，8001 两条未实测】
+- 用户决定：家庭局域网开放可以接受，规则保持不限来源；Radmin VPN 不用时退出。
+- 43127 是桌面端的手机配对桥（配对带短时效 token）。扫码后手机连不上，因为二维码里的地址是 vEthernet (Default Switch)（Hyper-V 默认交换机）的 172.27.0.1；手动把地址换成本机局域网 IPv4 后手机可以连上。【实测，用户操作】
+- 本机执行策略会拒绝未签名脚本（任务 I 首次运行报 not digitally signed）【实测】；另一个 agent 称 LocalMachine=RemoteSigned【未证实】。运行 .ps1 要加进程级 -ExecutionPolicy Bypass。
+- 没有采用停用 Default Switch 的做法（可能影响 Hyper-V，重启后可能恢复【未证实】）。
