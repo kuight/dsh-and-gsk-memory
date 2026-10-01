@@ -14,3 +14,5 @@
 - 2026-10-01 | 3080 | 禁用 deepread、import-claude 后，前端改报 @linxin666/dsh-client-ui-aionui-panel 缺 @deepseek-ai/dsh-client-runtime/client【用户截图】|
 - 2026-10-01 | K4b | dsh-client-runtime 在 web profile 与 E:\work\dsh-run 的 node_modules 中均不存在（dsh-web-app 为 0.1.5-rc.3）【实测】；client 主文件直接引用它的插件 13 个，除 aionui-panel（web-ui-all 内 id 为 web-ui-dsh-aionui-panel）外均已在禁用列表；approve-for-me 包另有 permission 条目未禁用【实测】|
 - 2026-10-01 | K5 | cordis.patch.yml 追加禁用 web-ui-dsh-aionui-panel；改前备份 E:\work\cordis.patch.yml.bak-20261001b；3080 重启后效果待用户验证【未实测】|
+- 2026-10-01 | 3080 | 禁用 aionui-panel 后，缺模块类报错消失；改报 web boot: 1 entry did not activate，dsh-turn-delete pending (waiting for service: conversationEvents)【用户截图】；该服务由谁提供【未证实】|
+- 2026-10-01 | K6 | cordis.patch.yml 追加禁用 turn-delete；改前备份 E:\work\cordis.patch.yml.bak-20261001c；3080 重启后效果待用户验证【未实测】|
