@@ -9,3 +9,5 @@
 - 2026-09-30 | K | ~/.dsh 相对 09-29 备份仅 11 个非插件文件变化；桌面图标 launcher 启动的是 E:\work\dsh-run 的 dsh、3080【实测】|
 - 2026-09-30 | K2 | cordis.patch.yml 已备份到 E:\work\cordis.patch.yml.bak-20260930；脚本函数 R 撞内置别名 r，查询段无输出，待重跑【实测】|
 - 2026-09-30 | A5 | 新交接、本日志、collaboration 通用约束，随 A4 一起推送 |
+- 2026-10-01 | K2b-K2d | web profile 的 cordis.yml 为空清单，插件经 package.json 的 dsh.profile.bundles 加载；包内 id：dsh-deepread=deepread、dsh-chat-import=import-claude（对照 dsh-mnemon=mnemon，与现有禁用写法一致）；两包 08-25 装入【实测】|
+- 2026-10-01 | K3 | cordis.patch.yml 末尾追加禁用 deepread、import-claude；改前备份 E:\work\cordis.patch.yml.bak-20261001；3080 重启后效果待用户验证【未实测】|
