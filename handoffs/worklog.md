@@ -11,3 +11,6 @@
 - 2026-09-30 | A5 | 新交接、本日志、collaboration 通用约束，随 A4 一起推送 |
 - 2026-10-01 | K2b-K2d | web profile 的 cordis.yml 为空清单，插件经 package.json 的 dsh.profile.bundles 加载；包内 id：dsh-deepread=deepread、dsh-chat-import=import-claude（对照 dsh-mnemon=mnemon，与现有禁用写法一致）；两包 08-25 装入【实测】|
 - 2026-10-01 | K3 | cordis.patch.yml 末尾追加禁用 deepread、import-claude；改前备份 E:\work\cordis.patch.yml.bak-20261001；3080 重启后效果待用户验证【未实测】|
+- 2026-10-01 | 3080 | 禁用 deepread、import-claude 后，前端改报 @linxin666/dsh-client-ui-aionui-panel 缺 @deepseek-ai/dsh-client-runtime/client【用户截图】|
+- 2026-10-01 | K4b | dsh-client-runtime 在 web profile 与 E:\work\dsh-run 的 node_modules 中均不存在（dsh-web-app 为 0.1.5-rc.3）【实测】；client 主文件直接引用它的插件 13 个，除 aionui-panel（web-ui-all 内 id 为 web-ui-dsh-aionui-panel）外均已在禁用列表；approve-for-me 包另有 permission 条目未禁用【实测】|
+- 2026-10-01 | K5 | cordis.patch.yml 追加禁用 web-ui-dsh-aionui-panel；改前备份 E:\work\cordis.patch.yml.bak-20261001b；3080 重启后效果待用户验证【未实测】|
