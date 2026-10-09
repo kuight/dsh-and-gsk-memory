@@ -16,3 +16,4 @@
 - 2026-10-01 | K5 | cordis.patch.yml 追加禁用 web-ui-dsh-aionui-panel；改前备份 E:\work\cordis.patch.yml.bak-20261001b；3080 重启后效果待用户验证【未实测】|
 - 2026-10-01 | 3080 | 禁用 aionui-panel 后，缺模块类报错消失；改报 web boot: 1 entry did not activate，dsh-turn-delete pending (waiting for service: conversationEvents)【用户截图】；该服务由谁提供【未证实】|
 - 2026-10-01 | K6 | cordis.patch.yml 追加禁用 turn-delete；改前备份 E:\work\cordis.patch.yml.bak-20261001c；3080 重启后效果待用户验证【未实测】|
+- 2026-10-09 | S1 | 状态盘点：3080/3081/3180/3400 均未监听，仅桌面端 43127 在跑【实测】；web cordis.patch.yml 今日 20:01 有改动（deepread/import-claude/aionui-panel/turn-delete 均禁用）【实测】；远端 HEAD=dfefd85 与本地同步【实测】；K6 后插件启用状态【未证实】|
