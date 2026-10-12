@@ -19,3 +19,4 @@
 - 2026-10-09 | S1 | 状态盘点：3080/3081/3180/3400 均未监听，仅桌面端 43127 在跑【实测】；web cordis.patch.yml 今日 20:01 有改动（deepread/import-claude/aionui-panel/turn-delete 均禁用）【实测】；远端 HEAD=dfefd85 与本地同步【实测】；K6 后插件启用状态【未证实】|
 - 2026-10-09 | 插件 | 桌面端安装 web search 插件 @deepseek-ai/dsh-web-search-deepseek（需 key，baseURL 127.0.0.1:43110），改动 ~/.dsh\profiles\web\cordis.patch.yml（20:01）【用户操作，agent 执行】|
 - 2026-10-09 | S2 | 旧会话定位：%APPDATA%\dsh-desktop\harness\storages\session_projcache\sessions\ 共 351 文件 2.59MB（含 gamebox 的 1 个 session-7e25b91d）；桌面端配置来源：%APPDATA%\dsh-desktop\harness\profiles\web\（cordis.patch.yml 109KB 23:47 改动）【实测】|
+- 2026-10-10 | 归档 | storages 目录 366 文件 3.70MB 已复制到 E:\work\sessions-archive-20261010\，源与目标文件数/字节数一致【实测】|
