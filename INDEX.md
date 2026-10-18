@@ -17,6 +17,16 @@
 - ✅ **DSH Desktop v0.10.0 已安装（2026-09-30）**：~/.dsh 未被改动；nvidia 手动填模型 ID 可用；模型请求期间 Harness 直连外部 443、未见 7897 连接（目标 IP 是否 NVIDIA 未证实）；主进程 0.0.0.0:43127 为手机配对桥，防火墙已开启并放行该端口（用户决定局域网开放）。详见 tech-notes/desktop-install.md
 - ⚠️ **旧工程会话恢复中（2026-09-30）**：桌面端 0.1.7 拒绝转换 work 下的旧会话；改为回 3080（0.1.5）打开，3080 前端卡在 dsh-deepread / dsh-chat-import。详见 handoffs/2026-09-30-plugins-sessions.md
 
+## 进度快照（2026-10-18 补录，覆盖 10-12~10-18）
+- ✅ **GUI 打不开根因 = 代理环境变量**（2026-10-14）：HTTP_PROXY/ALL_PROXY=127.0.0.1:7897 + NODE_USE_ENV_PROXY=1 劫持 desktop 探活；关全局代理只开规则代理即恢复。启动必须 explorer.exe。
+- ✅ **插件批量恢复**（10-12~10-14）：皮肤 0.4.6、web-ui 家族、pet 三件套（whale-widget 钱包/worktime-board 修仙值/pet 宠物）全部恢复；web-ui-all bundle 因 dsh.migrate 需绕过手动 insert。
+- ✅ **卡顿根因 = worktime-board 全量扫描**：禁用后 session/list 快约 10 倍；用户接受保留禁用。
+- ✅ **@linxin666 插件 0.4.7 升级修复**（10-18）：0.3.6 被降级 import 旧 API 致启动失败，0.4.7 全兼容（不 import 旧 API、不依赖缺失的 dsh-host-apiproxy）。
+- ✅ **dsh-our-free-model 本地 bundle 解析结案**（10-18）：过时报错，复刻 asar resolveBundleDir 验证可解析，重启后挂载成功（cordis.yml 1754-1759）。
+- ✅ **AMD 413 根因实锤**：AMD 网关 5MB 请求体硬限制；llm-pi-ai adapter 未实现 imageRequestPricing 致图片不压缩；大会话 38.6MB 死循环。
+- ✅ **provider 实测**：nvidia 断连（网络层）、mt 没额度、caw 点数不足、AMD 能用但 5MB 限制。
+- ✅ **dsh-task-notify 0.4.1** 已装（任务完成提醒，零 runtime 依赖，需重启生效）。
+
 ## 未完成事项
 → 待办清单统一见 handoffs/2026-09-28-dsh-017-migration-probe.md。摘要：
 - 确认 0.1.7 的 llm-pi-ai schema 是否支持 apiKeyEnv；若支持，追加只含 nvidia 的最小段后跑 rpc-test。
@@ -49,6 +59,8 @@
 | `tech-notes/desktop-options.md` | DSH 桌面端选项调研：官方/社区/anywhere-labs、保护步骤、待验证 |
 | `handoffs/2026-09-30-plugins-sessions.md` | 最新交接：插件与旧会话恢复进行中、3080 状态、备份与回退 |
 | `handoffs/worklog.md` | 滚动工作日志：每个任务的结果随任务一起追加 |
+| `handoffs/2026-10-18-dsh-recovery-and-our-free-model.md` | 10-12~10-18 补录交接：插件恢复、@linxin666 0.4.7、our-free-model 解析结案、AMD 413 根因 |
+| `tech-notes/desktop-recovery-2026-10-18.md` | 关键技术结论补录：AMD 5MB 限制、bundle resolve 机制、@linxin666 0.4.7 兼容、asar 读取要点 |
 | `handoffs/2026-09-29-reviewer-handoff.md` | 审核侧交接：桌面端 v0.10.0 实装、当前环境、未证实项、协作经验 |
 | `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（017 待办清单） |
 | `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |
@@ -61,6 +73,13 @@
 - ✅ **Node 22.16 不满足要求、确需升级，但不是卡顿的原因**：monorepo 声明 `^22.19.0 || >=24.0.0`，22.16 低于下限 → 升级为必要；但换 Node 24 后现象不变，卡顿根因是代理（见上一条）。
 - ✅ **"旧标签页作祟"**：来源 DSH-HANDOFF.md（dsh 端早期记忆）——"DSH 界面'一直转圈'的根因（2026-09-21 已解决）：浏览器旧标签卡在已杀进程的死 WebSocket 连接上。服务端本身健康（HTTP/RPC/WS 全测过）。解法=全关 3080 标签页+新开标签。勿再怀疑 DSH 进程死锁。"证据为当时实测记录。详情 tech-notes/known-facts.md。
 - ✅ **turn/end `undefined (reading 'length')` 根因 = dsh-memoir 的 autodistill**：`agent/turn-stopping` → `turnActivity(agent.session.events)` 的 `events.length` 未判空；0.1.5 下 `session.events` 为 undefined。禁用后 turn/end=completed（含 modlens 恢复对照组）。同类插件 dsh-mnemon（`for...of session.events` not iterable）、dsh-logicprobe（`session.events.length`）均已回禁。证据：lib 源码行号 + 实测对照，详情 tech-notes/plugin-compat-issues.md。
+
+## 已验证事实（10-18 补录，勿再当疑点重查）
+- ✅ **AMD 网关请求体硬限制 5MB（5242880 字节）**：直接实测 10KB/1MB→401、5MB/20MB→413。发图 413 的根因是 `llm-pi-ai` adapter 未实现 `imageRequestPricing`（官方 dsh-llm-deepseek 实现了）→ 图片不压缩内联累积超 5MB。大会话（371 轮 38.6MB）压缩请求也超 5MB → 压缩死循环每轮 413。证据：tech-notes/desktop-recovery-2026-10-18.md。
+- ✅ **`compaction-image-offload` 勿手动挂载**：projection `image/offload` 已随 harness 内置注册，手动 insert 报 `already registered` 致启动失败；且 offload 只处理 DSH 的 `IMAGE_OFFLOAD_REQUIRED` 业务错误，不处理网关直接抛的 HTTP 413。
+- ✅ **dsh-our-free-model "cannot resolve" 是过时报错**：提取 asar `dsh-app-boot/lib/index.js` 的 `resolveBundleDir`/`packageDirFromAnchor` 复刻验证能解析（profile anchor 命中）。装完 node_modules 后重启桌面端即挂载成功。本地 bundle 正确安装=package.json deps+bundles+profiles/web 的 pnpm，不需 dsh plugin install。
+- ✅ **@linxin666 需 0.4.x 才兼容新 dsh-settings**：0.3.6 import 已移除的 `installSettingsSection`/`settingsNamespace` 致启动失败；0.4.7 全兼容（不 import 旧 API，remote-web-ui 已移除对缺失的 dsh-host-apiproxy 的依赖）。
+- ✅ **装插件/升级一律走 profiles/web 的 pnpm**：系统 `dsh.cmd` 是 0.1.7-rc.2 另一环境，与桌面 0.2.0-rc.2 不匹配，plugin install 无效。
 
 ## 已证伪 / 勿复勘
 - ❌ genspark2api 驱动 agent / 本地部署 / 新模型可调——已终止，勿复勘（tech-notes/genspark2api.md）。

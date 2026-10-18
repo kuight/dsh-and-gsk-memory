@@ -20,3 +20,15 @@
 - 2026-10-09 | 插件 | 桌面端安装 web search 插件 @deepseek-ai/dsh-web-search-deepseek（需 key，baseURL 127.0.0.1:43110），改动 ~/.dsh\profiles\web\cordis.patch.yml（20:01）【用户操作，agent 执行】|
 - 2026-10-09 | S2 | 旧会话定位：%APPDATA%\dsh-desktop\harness\storages\session_projcache\sessions\ 共 351 文件 2.59MB（含 gamebox 的 1 个 session-7e25b91d）；桌面端配置来源：%APPDATA%\dsh-desktop\harness\profiles\web\（cordis.patch.yml 109KB 23:47 改动）【实测】|
 - 2026-10-10 | 归档 | storages 目录 366 文件 3.70MB 已复制到 E:\work\sessions-archive-20261010\，源与目标文件数/字节数一致【实测】|
+- 2026-10-12 | 皮肤 | 皮肤插件 @linxin666/dsh-client-ui-skin-center 0.3.6→0.4.6 修复；0.3.6 import 旧 API（installSettingsSection/settingsNamespace）宿主已移除，0.4.6 适配新 API【实测】；备份 cordis.patch.yml.bak-full-20261012-1530|
+- 2026-10-13 | 恢复 | 批量恢复 web-ui 家族插件；web-ui-all bundle 带 dsh.migrate 被移进 generations 需绕过 bundle 手动 insert【实测】；备份 bak-webui-batch-20261013|
+- 2026-10-13 | 清理 | 删除 09-25 遗留禁用块 41 行 + Bisect 块 18 行，全为 not-found 悬空引用【实测】；备份 bak-before-clean-2331|
+- 2026-10-13 | pet | 宠物数据迁移：0.3.6 存 ~/.dsh/pet.json，0.4.6 换 DSH_HOME 存 harness\pet.json；挂载 id 误写 ui-pet 致消失，回滚 ui-pet 恢复【实测】|
+- 2026-10-14 | 根因 | GUI 打不开根因=代理环境变量（HTTP_PROXY=127.0.0.1:7897 + NODE_USE_ENV_PROXY=1）劫持 desktop 探活；关全局代理只开规则代理即恢复【用户确认】|
+- 2026-10-14 | 卡顿 | worktime-board 每 5 分钟全量 listSessions() 扫描 393MB/356 会话是卡顿元凶；禁用后 session/list 耗时快约 10 倍（4.7s→0.35s）【实测】；用户接受保留禁用|
+- 2026-10-14 | 413 | 发图 413 实锤 AMD 网关 5MB 请求体硬限制；llm-pi-ai 自定义 adapter（amd/mt/caw/keyan/nvidia）未实现 imageRequestPricing→图片不压缩内联累积超 5MB【实测】|
+- 2026-10-17 | 413 | 大会话 413 死循环确认：371 轮会话解压 38.6MB（1M token 合法但字节超 5MB）；DSH 压缩请求也超 5MB→压缩失败→历史永压不小→每轮 413【实测】|
+- 2026-10-18 | 模型 | provider 实测：nvidia 断连（TimeoutError，网络层非 key）、mt 没额度、caw 免费点数不足、AMD 能用但有 5MB 限制【实测】|
+- 2026-10-18 | 提醒 | 装 dsh-task-notify 0.4.1（零 runtime 依赖、CJK 安全、适配 0.2.0-rc.2）替代不可用的 dsh-notifier（依赖 MISS 的 dsh-client-runtime）【已装需重启生效】|
+- 2026-10-18 | 修复 | 7 个 @linxin666 插件被 pnpm 降级到 0.3.6 import 旧 API 致启动失败；逐一解包验证 0.4.7 兼容（不 import 旧 API、不依赖缺失的 dsh-host-apiproxy），升级 0.4.7 修复【实测】|
+- 2026-10-18 | bundle | dsh-our-free-model "cannot resolve profile bundle" 结案：提取 asar dsh-app-boot 的 resolveBundleDir/packageDirFromAnchor 复刻验证可解析，根因=过时报错（node_modules 装好前的旧启动）；重启桌面端挂载成功（cordis.yml 1754-1759 行）【实测】|
