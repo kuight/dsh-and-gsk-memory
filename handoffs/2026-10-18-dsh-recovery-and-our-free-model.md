@@ -97,8 +97,10 @@ skin-center（0.4.6）、web-search-thirdparty、web-ui-settings、market、plug
 - **根因**：AMD 网关 `developer.amd.com.cn/radeon/api/v1` **请求体硬限制 5MB（5242880 字节）**。直接实测：10KB/1MB→401，5MB/20MB→413，响应明确 "over the 5242880 byte limit"。
 - **机制链**：发图 → `spill-policy` 调 `imageRequestPricing(provider,model)` → **`llm-pi-ai` adapter（amd/mt/caw/keyan/nvidia）全未实现**（官方 dsh-llm-deepseek 实现了）→ 抛 "no image token calculator" → 图片不压缩内联 → 累积超 5MB → 413。
 - **大会话死循环**：371 轮会话解压 38.6MB（1M token 合法但字节超 5MB）。DSH 压缩请求也超 5MB → 压缩失败 → 历史永压不小 → 每轮 413。compaction 失败 24 次中 10 次是 413。
-- **解法**：大对话/发图用 **caw**（实测发图成功）；AMD 只适合历史小的新会话。
-- **offload 机制不救**：`compaction-image-offload` 只处理 DSH 的 `IMAGE_OFFLOAD_REQUIRED` 业务错误，不处理网关直接抛的 HTTP 413。且该插件 projection `image/offload` **已内置注册**，手动 insert 会 `already registered` 报错 → **勿手动挂载内置插件**。
+- **解法（已根治 2026-10-19，用户确认）**：根因不是"不压缩"而是"总预算 maxRequestImageBytes 默认 20MiB 与 AMD 5MB 网关不匹配"。在 `cordis.patch.yml` 的 amd provider 块加 `maxRequestImageBytes: 4194304`（4MiB）→ 超预算触发 `IMAGE_OFFLOAD_REQUIRED` → compaction-image-offload 把旧图转文字 → 不再 413。详见 tech-notes/desktop-recovery-2026-10-18.md 根治方案。
+- **副作用**：AMD 多发图时最早图转文字引用（图不丢，模型不看原图）。只影响 AMD。
+- **回滚**：删该行重启；备份 cordis.patch.yml.bak-before-amd-imgbudget-20261019192832。
+- **offload 前置**：`compaction-image-offload` 已内置挂载（cordis.yml 566 行）；projection `image/offload` **已内置注册**，手动 insert 会 `already registered` 报错 → **勿手动挂载内置插件**。
 
 ---
 

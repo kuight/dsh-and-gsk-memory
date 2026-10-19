@@ -80,6 +80,7 @@
 - ✅ **dsh-our-free-model "cannot resolve" 是过时报错**：提取 asar `dsh-app-boot/lib/index.js` 的 `resolveBundleDir`/`packageDirFromAnchor` 复刻验证能解析（profile anchor 命中）。装完 node_modules 后重启桌面端即挂载成功。本地 bundle 正确安装=package.json deps+bundles+profiles/web 的 pnpm，不需 dsh plugin install。
 - ✅ **@linxin666 需 0.4.x 才兼容新 dsh-settings**：0.3.6 import 已移除的 `installSettingsSection`/`settingsNamespace` 致启动失败；0.4.7 全兼容（不 import 旧 API，remote-web-ui 已移除对缺失的 dsh-host-apiproxy 的依赖）。
 - ✅ **装插件/升级一律走 profiles/web 的 pnpm**：系统 `dsh.cmd` 是 0.1.7-rc.2 另一环境，与桌面 0.2.0-rc.2 不匹配，plugin install 无效。
+- ✅ **AMD 发图 413 已根治（2026-10-19）**：根因=pi-ai 的 maxRequestImageBytes 总预算默认 20MiB 与 AMD 网关 5MB 不匹配（非不压缩，是停止条件设太高）。在 cordis.patch.yml 的 amd provider 块加 maxRequestImageBytes:4194304（4MiB）→ 超预算触发 compaction-image-offload 转文字 → 不再 413。副作用=AMD 多发图时最早图转文字引用。备份 bak-before-amd-imgbudget-20261019192832。
 
 ## 已证伪 / 勿复勘
 - ❌ genspark2api 驱动 agent / 本地部署 / 新模型可调——已终止，勿复勘（tech-notes/genspark2api.md）。

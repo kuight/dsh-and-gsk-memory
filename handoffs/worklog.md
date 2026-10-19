@@ -32,3 +32,4 @@
 - 2026-10-18 | 提醒 | 装 dsh-task-notify 0.4.1（零 runtime 依赖、CJK 安全、适配 0.2.0-rc.2）替代不可用的 dsh-notifier（依赖 MISS 的 dsh-client-runtime）【已装需重启生效】|
 - 2026-10-18 | 修复 | 7 个 @linxin666 插件被 pnpm 降级到 0.3.6 import 旧 API 致启动失败；逐一解包验证 0.4.7 兼容（不 import 旧 API、不依赖缺失的 dsh-host-apiproxy），升级 0.4.7 修复【实测】|
 - 2026-10-18 | bundle | dsh-our-free-model "cannot resolve profile bundle" 结案：提取 asar dsh-app-boot 的 resolveBundleDir/packageDirFromAnchor 复刻验证可解析，根因=过时报错（node_modules 装好前的旧启动）；重启桌面端挂载成功（cordis.yml 1754-1759 行）【实测】|
+- 2026-10-19 | 413根治 | AMD 发图 413 修复：根因=pi-ai 的 maxRequestImageBytes 总预算默认 20MiB 与 AMD 网关 5MB 硬限制不匹配（压缩在跑但停止条件形同虚设）。在 cordis.patch.yml 的 amd provider 块加 maxRequestImageBytes:4194304（4MiB）→ 超预算触发 IMAGE_OFFLOAD_REQUIRED → compaction-image-offload 把旧图转文字 → 不再 413【实测，用户确认修复成功】；备份 cordis.patch.yml.bak-before-amd-imgbudget-20261019192832；副作用=AMD 多发图时最早图转文字引用（图不丢，模型不看原图）|

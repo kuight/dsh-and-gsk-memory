@@ -30,6 +30,39 @@
 - **offload 机制不救**：`compaction-image-offload` 只处理 DSH 的 `IMAGE_OFFLOAD_REQUIRED` 业务错误，**不处理**网关直接抛的 HTTP 413
 - **勿手动挂载内置插件**：`compaction-image-offload` 的 projection `image/offload` **已随 harness 内置注册**，手动 insert 报 `Error: session message projection "image/offload" is already registered` → 启动失败。回滚 `bak-before-offload-20261014` 恢复
 
+### 根治方案（2026-10-19 实测，用户确认修复成功）
+
+**修正认知**：pi-ai **其实会压缩图片**（每张压到 ≤1 MiB，`requestImageMaxBytes` 默认 1MiB + sharp 阶梯重编码），但**总预算 `maxRequestImageBytes` 默认 20 MiB**，远高于 AMD 网关 5MB → 压缩器判定"base64 总量 <20MiB 不丢弃旧图" → ≥5 张图累积超 5MB 但仍 <20MiB → 整包发出 → AMD 413。**不是不压缩，是停止条件设太高形同虚设**。
+
+**关键字段**（`dsh-llm-pi-ai/lib/index.js` 的 provider schema，provider 级）：
+```js
+DEFAULT_MAX_REQUEST_IMAGE_BYTES  = 20 * 1024 * 1024   // 总预算（问题根源）
+DEFAULT_REQUEST_IMAGE_PIXEL_BUDGET = 2048 * 2048       // 每图像素预算
+DEFAULT_REQUEST_IMAGE_MAX_BYTES   = 1024 * 1024        // 每图压缩目标
+Config = { providers: z.dict(profile) }                 // 字段在 provider profile 级
+```
+
+**修复**：在 `cordis.patch.yml` 的 `amd:` provider 块加：
+```yaml
+amd:
+  displayName: amd
+  apiKeyEnv: AMD_API_KEY
+  api: openai-completions      # 走 pi-ai 的 openai-completions 适配器
+  baseURL: https://developer.amd.com.cn/radeon/api/v1
+  maxRequestImageBytes: 4194304   # ← 4MiB，低于 AMD 5MB 网关
+  models:
+```
+
+**机制**：设 4MiB 后，请求里 base64 图总量逼近 4MiB → pi-ai 抛 `IMAGE_OFFLOAD_REQUIRED_CODE` → 已挂载的 `dsh-compaction-image-offload` 把最旧图 offload 成文字引用 → 请求体变小 → 不撞 AMD 5MB。**不再 413**。
+
+**前提**：`dsh-compaction-image-offload` 必须已挂载（cordis.yml 566-567 行 `- id: image-offload`，内置，确认已挂）。若它被禁用，改低预算会从"优雅转文字"变"直接报图片超预算错"。
+
+**副作用**：AMD 上发图超过约 4 张时，**最早的图会转成文字引用**（图不丢，附件仓库仍在，但模型不再看到原图）。只影响 AMD，caw/nvidia/mt 不受影响。
+
+**回滚**：删掉该行重启即恢复默认 20MiB；备份 `cordis.patch.yml.bak-before-amd-imgbudget-20261019192832`。
+
+**为什么 Cherry Studio 不 413**：Cherry 发图前做了压缩/预算设得低，与 DSH 的 AMD 链路（20MiB 预算）不同。
+
 ---
 
 ## 2. dsh-our-free-model 本地 bundle 解析（resolve 机制 + 过时报错结论）
