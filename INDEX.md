@@ -61,6 +61,7 @@
 | `handoffs/worklog.md` | 滚动工作日志：每个任务的结果随任务一起追加 |
 | `handoffs/2026-10-18-dsh-recovery-and-our-free-model.md` | 10-12~10-18 补录交接：插件恢复、@linxin666 0.4.7、our-free-model 解析结案、AMD 413 根因 |
 | `tech-notes/desktop-recovery-2026-10-18.md` | 关键技术结论补录：AMD 5MB 限制、bundle resolve 机制、@linxin666 0.4.7 兼容、asar 读取要点 |
+| `tech-notes/compaction-image-token-bug.md` | compaction 图片 token 错配诊断：nvidia 25MB/AMD 5MB 上限、pi-ai 未实现 imageRequestPricing、compaction 不触发、修复方向 |
 | `handoffs/2026-09-29-reviewer-handoff.md` | 审核侧交接：桌面端 v0.10.0 实装、当前环境、未证实项、协作经验 |
 | `handoffs/2026-09-28-dsh-017-migration-probe.md` | 0.1.7 017 迁移机制复核 + 手工兜底结果（017 待办清单） |
 | `handoffs/2026-09-27-dsh-017-trial.md` | 上一批：0.1.7 隔离试装（017）环境就绪 |
@@ -80,7 +81,9 @@
 - ✅ **dsh-our-free-model "cannot resolve" 是过时报错**：提取 asar `dsh-app-boot/lib/index.js` 的 `resolveBundleDir`/`packageDirFromAnchor` 复刻验证能解析（profile anchor 命中）。装完 node_modules 后重启桌面端即挂载成功。本地 bundle 正确安装=package.json deps+bundles+profiles/web 的 pnpm，不需 dsh plugin install。
 - ✅ **@linxin666 需 0.4.x 才兼容新 dsh-settings**：0.3.6 import 已移除的 `installSettingsSection`/`settingsNamespace` 致启动失败；0.4.7 全兼容（不 import 旧 API，remote-web-ui 已移除对缺失的 dsh-host-apiproxy 的依赖）。
 - ✅ **装插件/升级一律走 profiles/web 的 pnpm**：系统 `dsh.cmd` 是 0.1.7-rc.2 另一环境，与桌面 0.2.0-rc.2 不匹配，plugin install 无效。
-- ✅ **AMD 发图 413 已根治（2026-10-19）**：根因=pi-ai 的 maxRequestImageBytes 总预算默认 20MiB 与 AMD 网关 5MB 不匹配（非不压缩，是停止条件设太高）。在 cordis.patch.yml 的 amd provider 块加 maxRequestImageBytes:4194304（4MiB）→ 超预算触发 compaction-image-offload 转文字 → 不再 413。副作用=AMD 多发图时最早图转文字引用。备份 bak-before-amd-imgbudget-20261019192832。
+- ✅ **AMD 发图 413 已根治（2026-10-19）**：根因=pi-ai 的 maxRequestImageBytes 总预算默认 20MiB 与 AMD 网关 5MB 不匹配（非不压缩，是停止条件设太高）。在 cordis.patch.yml 的 amd provider 块加 maxRequestImageBytes:4194304（4MiB）→ 超预算触发 compaction-image-offload 转文字 → 不再 413。副作用=AMD 多发图时最早图转文字引用。备份 bak-before-amd-imgbudget-20261019192832。**后因此配置引发 AMD 工具调用故障，已回滚。**
+- ✅ **nvidia 网关请求体 25MiB 硬上限**（2026-10-20 实测）：`payload is below 26214400 bytes`。AMD 5MB 上限。大会话（52.8MB 解压）超限被拒。
+- ✅ **compaction 图片 token 错配（2026-10-20 核心诊断）**：compaction 按 token 触发（contextWindow×0.8），tokenMeter 对图片调 `llm.imageRequestPricing` 定价；DS 官方实现→图片按真实视觉 token；pi-ai（AMD/nvidia）未实现→按"引用 JSON"算（~几十 token/张）→图片字节低估→compaction 永不触发→字节爆炸→撞 provider 上限。**registerAdapter 覆盖已确认不可行**（DUPLICATE_ADAPTER）。详见 tech-notes/compaction-image-token-bug.md。
 
 ## 已证伪 / 勿复勘
 - ❌ genspark2api 驱动 agent / 本地部署 / 新模型可调——已终止，勿复勘（tech-notes/genspark2api.md）。
